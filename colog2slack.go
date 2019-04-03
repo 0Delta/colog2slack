@@ -101,17 +101,20 @@ func post2slack(url string, message slackMessageFormat) error {
 
 var slack_incommig_url = ""
 
-func Enable(ImcommigUrl string) {
-	slack_incommig_url = ImcommigUrl
-	hook := &myHook{
-		levels: []colog.Level{
+func Enable(ImcommigUrl string, levels ...colog.Level) {
+	if len(levels) == 0 {
+		levels = []colog.Level{
 			colog.LAlert,
 			colog.LError,
 			colog.LWarning,
 			colog.LInfo,
 			colog.LDebug,
 			colog.LTrace,
-		},
+		}
+	}
+	slack_incommig_url = ImcommigUrl
+	hook := &myHook{
+		levels: levels,
 	}
 	colog.AddHook(hook)
 	colog.Register()
